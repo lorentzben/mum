@@ -32,12 +32,7 @@ console_logger.setFormatter(formatter)
 # adds handlers to logger
 logger.addHandler(file_logger)
 logger.addHandler(console_logger)
-#might be obsolete 
-#logging.basicConfig(format=logFormatter, level=logging.INFO)
-#handler = logging.FileHandler("mum.log")
-#handler.setLevel(logging.DEBUG)
-#handler.setFormatter(formatter)
-#logger.addHandler(handler)
+
 
 
 try:

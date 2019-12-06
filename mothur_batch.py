@@ -4,6 +4,27 @@
 import readTableNumpy
 import os
 import csv
+import logging
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# Logging handler which catches EVERYTHING
+file_logger = logging.FileHandler('mum.log')
+file_logger.setLevel(logging.DEBUG)
+# Logging handler which logs less
+console_logger = logging.StreamHandler()
+console_logger.setLevel(logging.ERROR)
+
+# Formats the logs so they are pretty
+logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
+formatter = logging.Formatter(logFormatter)
+file_logger.setFormatter(formatter)
+console_logger.setFormatter(formatter)
+
+# adds handlers to logger
+logger.addHandler(file_logger)
+logger.addHandler(console_logger)
 
 try:
     from mothur_py import Mothur
