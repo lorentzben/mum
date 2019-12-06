@@ -24,6 +24,7 @@ The current files are:
 * oligos.txt (example file)
 
 Future work:
+* Reformat the readme to look more like CompBio wrapper readme
 * Implement verbose logging at the info and debugging scale
 * Implememt unit testing using the unittest package
 * Move final files into a output directory 
