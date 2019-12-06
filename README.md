@@ -24,7 +24,7 @@ After cloning a folder called mum will be created. Inside will be this README an
 $ python3 mum.py -h 
 
 usage: mum.py [-h] -n JOB_NAME [-c] [-l MAX_LEN] [-p PRE_CLUST]
-              [-s SUB_SAMPLE] [-v]
+              [-s SUB_SAMPLE] [-q] [-v]
 
 Perform Analysis of 16s Microbial Data using Mothur
 
@@ -36,6 +36,8 @@ optional arguments:
   -l MAX_LEN     determines the longest value permitted for sequences
   -p PRE_CLUST   pre cluster value, higher is more stringent
   -s SUB_SAMPLE  sub sample value, only applicable for custom runs
+  -q, --quiet    Reduces the amount of text printed to terminal, check
+                 logfiles more often
   -v, --version  show program's version number and exit
 ```
 
