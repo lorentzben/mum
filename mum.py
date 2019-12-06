@@ -20,7 +20,7 @@ logger.setLevel(logging.DEBUG)
 file_logger = logging.FileHandler('mum.log')
 file_logger.setLevel(logging.DEBUG)
 # Logging handler which logs less
-console_logger = logger.StreamHandler()
+console_logger = logging.StreamHandler()
 console_logger.setLevel(logging.ERROR)
 
 # Formats the logs so they are pretty
