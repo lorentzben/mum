@@ -14,14 +14,30 @@ import datetime
 import logging
 
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# Logging handler which catches EVERYTHING
+file_logger = logging.FileHandler('mum.log')
+file_logger.setLevel(logging.DEBUG)
+# Logging handler which logs less
+console_logger = logger.StreamHandler()
+console_logger.setLevel(logging.ERROR)
+
+# Formats the logs so they are pretty
 logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
 formatter = logging.Formatter(logFormatter)
-logging.basicConfig(format=logFormatter, level=logging.INFO)
-logger = logging.getLogger(__name__)
-handler = logging.FileHandler("mum.log")
-handler.setLevel(logging.DEBUG)
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+file_logger.setFormatter(formatter)
+console_logger.setFormatter(formatter)
+
+# adds handlers to logger
+logger.addHandler(file_logger)
+logger.addHandler(console_logger)
+#might be obsolete 
+#logging.basicConfig(format=logFormatter, level=logging.INFO)
+#handler = logging.FileHandler("mum.log")
+#handler.setLevel(logging.DEBUG)
+#handler.setFormatter(formatter)
+#logger.addHandler(handler)
 
 
 try:
