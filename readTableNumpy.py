@@ -82,7 +82,6 @@ def create_seq_table(project_name):
 
 def print_seq_table(seq_table):
     for line in seq_table:
-        logger.debug(*line,)
         print(*line,)
 
 

@@ -140,7 +140,7 @@ def main(arg):
 
     logger.info("calling mothur batch")
     mothur_batch.mothur_batch(project_name=arg.job_name, standard=not arg.custom, max_len=arg.max_len,
-                              pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample)
+                              pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample,quiet=quiet)
 
 
 if __name__ == "__main__":
@@ -157,6 +157,7 @@ if __name__ == "__main__":
                         help='pre cluster value, higher is more stringent', dest='pre_clust')
     parser.add_argument('-s', action='store', type=int, required=False,
                         help='sub sample value, only applicable for custom runs', dest='sub_sample')
+    parser.add_argument('-q','--quiet',action='store_true', default=False, help="Reduces the amount of text printed to terminal, check logfiles more often",dest='quiet')
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
 

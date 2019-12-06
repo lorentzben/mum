@@ -14,7 +14,10 @@ file_logger = logging.FileHandler('mum.log')
 file_logger.setLevel(logging.DEBUG)
 # Logging handler which logs less
 console_logger = logging.StreamHandler()
-console_logger.setLevel(logging.INFO)
+if quiet:
+    console_logger.setLevel(logging.WARNING)
+else:
+    console_logger.setLevel(logging.INFO)
 
 # Formats the logs so they are pretty
 logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
@@ -32,7 +35,7 @@ except ImportError:
     logger.critical("install mothur-py using pip")
 
 
-def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_samp_size):
+def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_samp_size, quiet):
     # This one uses the trainset16_022016.pds.fasta
     # Uses the silva.bacteria.fasta
 
