@@ -11,21 +11,34 @@ import readTableNumpy
 import mothur_batch
 import argparse
 import datetime
+import logging
+
+
+logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
+formatter = logging.Formatter(logFormatter)
+logging.basicConfig(format=logFormatter, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler("mum.log")
+handler.setLevel(logging.DEBUG)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 try:
+    logger.info("checking if mothur_py is installed")
     from mothur_py import Mothur
 except ImportError:
-    print("install mothur-py using pip")
+    logging.critical("install mothur-py using pip")
 
 # Checks to make sure mothur is installed
 
 
 def setup():
     try:
+        logger.info("Making a mothur instace exists")
         m = Mothur()
     except:
-        print("install mothur-py using pip")
+        logging.critical("install mothur-py using pip")
     design_oligos_ex()
     check_rdp()
     check_silva()
@@ -35,48 +48,45 @@ def setup():
 # Checks if a design file and primers exists
 def design_oligos_ex():
     if os.path.exists("design.txt"):
-        print("design good")
+        logger.info("design.txt exists")
     else:
-        print("Make sure a design file named design.txt is in this directory")
+        logger.critical("Make sure a design file named design.txt is in this directory")
         exit(1)
     if os.path.exists("oligos.txt"):
-        print("oligos good")
+        logger.info("oligos.txt exists")
     else:
-        print("Make sure the primers used in PCR are in oligos.txt in this directory")
+        logger.critical("Make sure the primers used in PCR are in oligos.txt in this directory")
         exit(1)
 
 # Checks to see if .fastq files exist, if yes if they are div by 2, if no check fastq.tar.gz exist
 
 
 def samples_ex():
+    logger.info("Checking to see if samples exist")
     fastq = glob.glob('./*.fastq')
     if not fastq:
 
         fastq_tar_gz = glob.glob('./*.fastq.gz')
         if not fastq_tar_gz:
-            print("Please check to make sure fastq or fastq.gz files exist")
+            logging.critical("Please check to make sure fastq or fastq.gz files exist")
         else:
+            logger.info("Unzipping files")
             os.system("gunzip *.fastq.gz")
     else:
-        print(str(len(fastq)) + " Fastq files detected " +
+        logger.info(str(len(fastq)) + " Fastq files detected " +
               str((len(fastq)/2)) + " Samples expected ")
         if (len(fastq) % 2 != 0):
-            print("if using paired reads check for missing reads")
+            logger.error("if using paired reads check for missing reads")
 
-
-# Collects params for custom run
-def customParams():
-    # do it
-    print("ok")
 
 # Check to see if trainset16_022016.pds.fasta, and trainset16_022016.pds.tax exists or downloads them
 
 
 def check_rdp():
     if (os.path.exists("trainset16_022016.pds.fasta") and os.path.exists("trainset16_022016.pds.tax")):
-        print("rdp exists")
+        logger.info("rdp exists")
     else:
-        print("Will collect RDP files")
+        logger.info("Will collect RDP files")
         os.system(
             "wget https://www.mothur.org/w/images/c/c3/Trainset16_022016.pds.tgz")
         os.system("tar -xzf Trainset16_022016.pds.tgz")
@@ -85,15 +95,15 @@ def check_rdp():
         os.system("cp trainset16_022016.pds.tax ..")
         os.chdir("..")
         os.system("rm -rf Trainset16_022016.pds.tgz")
-        print("files collected")
+        logger.info("rdp files collected")
 # Checks to see if silva.bacteria.fasta exists or downloads it
 
 
 def check_silva():
     if os.path.exists("silva.bacteria.fasta"):
-        print("silva exists")
+        logger.info("silva exists")
     else:
-        print("Will collect silva files")
+        logger.info("Will collect silva files")
         os.system("wget https://www.mothur.org/w/images/9/98/Silva.bacteria.zip")
         os.system("unzip Silva.bacteria.zip")
         os.chdir("silva.bacteria")
@@ -102,7 +112,7 @@ def check_silva():
         os.system("rm -rf silva.bacteria")
         os.system("rm -rf Silva.bacteria.zip")
         os.system("rm -rf __MACOSX")
-        print("files collected")
+        logger.info("files collected")
 
 
 # TODO Check that the mothur run was sucessful
@@ -114,8 +124,10 @@ def mothurCompleted():
 
 
 def main(arg):
+    logger.info("running setup checks")
     setup()
 
+    logger.info("calling mothur batch")
     mothur_batch.mothur_batch(project_name=arg.job_name, standard=not arg.custom, max_len=arg.max_len,
                               pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample)
 
