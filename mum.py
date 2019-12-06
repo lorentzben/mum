@@ -16,10 +16,10 @@ import logging
 
 logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
 formatter = logging.Formatter(logFormatter)
-logging.basicConfig(format=logFormatter, level=logging.DEBUG)
+logging.basicConfig(format=logFormatter, level=logging.WARNING)
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler("mum.log")
-handler.setLevel(logging.WARNING)
+handler.setLevel(logging.DEBUG)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
