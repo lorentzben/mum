@@ -12,7 +12,7 @@ file_logger = logging.FileHandler('mum.log')
 file_logger.setLevel(logging.DEBUG)
 # Logging handler which logs less
 console_logger = logging.StreamHandler()
-console_logger.setLevel(logging.ERROR)
+console_logger.setLevel(logging.DEBUG)
 
 # Formats the logs so they are pretty
 logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
@@ -27,10 +27,12 @@ logger.addHandler(console_logger)
 
 def create_seq_table(project_name):
     # creates reads_table and populates header
+    logger.info("created the empty table and added headers")
     reads_table = []
     reads_table.append(["Step", "Ambigs", "No. Seq", "% Total Seq"])
 
     # prepares the sum of seqs
+    logger.info("finds count of the first set of seqs")
     max_seqs = 0
     assembly_3 = numpy.loadtxt(
         project_name+".trim.contigs.summary", usecols=(4, 6), skiprows=1)
@@ -39,6 +41,7 @@ def create_seq_table(project_name):
     # populates the max_seqs variable for calculating the percent remaining seqs
     max_seqs = assembly_3_vals[1]
     # appends the data from assembly step to table
+    logger.info("adds info about step 3 to table")
     reads_table.append(["Assembly_3", numpy.around(assembly_3_vals[0], decimals=0),
                         numpy.around(assembly_3_vals[1], decimals=0), numpy.around((assembly_3_vals[1]/max_seqs)*100, decimals=2)])
 
@@ -46,6 +49,7 @@ def create_seq_table(project_name):
     ambig_5 = numpy.loadtxt(
         project_name+".trim.contigs.good.summary", usecols=(4, 6), skiprows=1)
     ambig_5_vals = numpy.sum(ambig_5, axis=0)
+    logger.info("adds the info from step 5 to the table")
     reads_table.append(["Ambigous_5", numpy.around(ambig_5_vals[0], decimals=0),
                         numpy.around(ambig_5_vals[1], decimals=0), numpy.around((ambig_5_vals[1]/max_seqs)*100, decimals=2)])
 
@@ -53,6 +57,7 @@ def create_seq_table(project_name):
     unique_8 = numpy.loadtxt(
         project_name+".trim.contigs.good.unique.summary", usecols=(4, 6), skiprows=1)
     unique_8_vals = numpy.sum(unique_8, axis=0)
+    logger.info("adds info from step 8 to table")
     reads_table.append(["Unique_8", numpy.around(unique_8_vals[0], decimals=0),
                         numpy.around(unique_8_vals[1], decimals=0), numpy.around((unique_8_vals[1]/max_seqs)*100, decimals=2)])
 
@@ -60,6 +65,7 @@ def create_seq_table(project_name):
     aligned_13 = numpy.loadtxt(
         project_name+".trim.contigs.good.unique.summary", usecols=(4, 6), skiprows=1)
     aligned_13_vals = numpy.sum(aligned_13, axis=0)
+    logger.info("adds info from step 13 to table")
     reads_table.append(["Aligned_13", numpy.around(aligned_13_vals[0], decimals=0),
                         numpy.around(aligned_13_vals[1], decimals=0), numpy.around((aligned_13_vals[1]/max_seqs)*100, decimals=2)])
 
@@ -67,6 +73,7 @@ def create_seq_table(project_name):
     chimera_20 = numpy.loadtxt(
         project_name+".trim.contigs.good.unique.good.filter.unique.precluster.pick.summary", usecols=(4, 6), skiprows=1)
     chimera_20_vals = numpy.sum(chimera_20, axis=0)
+    logger.info("adds info from step 20 to table")
     reads_table.append(["Chimera_20", numpy.around(chimera_20_vals[0], decimals=0),
                         numpy.around(chimera_20_vals[1], decimals=0), numpy.around((chimera_20_vals[1]/max_seqs)*100, decimals=2)])
 
@@ -75,6 +82,7 @@ def create_seq_table(project_name):
 
 def print_seq_table(seq_table):
     for line in seq_table:
+        logger.debug(*line,)
         print(*line,)
 
 
@@ -83,7 +91,7 @@ def write_seq_table_to_file(seq_table, project_name):
         for line in seq_table:
             print(*line, file=seq_table_out)
 
-    print("Table written to: seqTable"+project_name+".txt")
+    logger.info("Table written to: seqTable"+project_name+".txt")
 
 # Test case
 #temp = create_seq_table("test")
