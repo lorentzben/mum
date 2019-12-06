@@ -19,7 +19,7 @@ formatter = logging.Formatter(logFormatter)
 logging.basicConfig(format=logFormatter, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler("mum.log")
-handler.setLevel(logging.DEBUG)
+handler.setLevel(logging.INFO)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
