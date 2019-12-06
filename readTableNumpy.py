@@ -4,29 +4,31 @@ import numpy
 import csv
 import logging
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# Logging handler which catches EVERYTHING
+file_logger = logging.FileHandler('mum.log')
+file_logger.setLevel(logging.DEBUG)
+# Logging handler which logs less
+console_logger = logging.StreamHandler()
+
+
 def set_up_logger(quiet):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    # Logging handler which catches EVERYTHING
-    file_logger = logging.FileHandler('mum.log')
-    file_logger.setLevel(logging.DEBUG)
-    # Logging handler which logs less
-    console_logger = logging.StreamHandler()
     if quiet:
         console_logger.setLevel(logging.WARNING)
     else:
         console_logger.setLevel(logging.INFO)
 
 
-    # Formats the logs so they are pretty
-    logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(logFormatter)
-    file_logger.setFormatter(formatter)
-    console_logger.setFormatter(formatter)
+# Formats the logs so they are pretty
+logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
+formatter = logging.Formatter(logFormatter)
+file_logger.setFormatter(formatter)
+console_logger.setFormatter(formatter)
 
-    # adds handlers to logger
-    logger.addHandler(file_logger)
-    logger.addHandler(console_logger)
+# adds handlers to logger
+logger.addHandler(file_logger)
+logger.addHandler(console_logger)
 
 
 def create_seq_table(project_name):
