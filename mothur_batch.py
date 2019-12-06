@@ -49,7 +49,7 @@ def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_sam
     # print(float(proc))
     # puts forward and backwards reads together into one
     nproc = int(float(proc)*.4)
-    logger.debug(nproc + " processors")
+    logger.debug(str(nproc) + " processors")
     # print(nproc)
     os.system("rm -rf processors.txt")
     logger.debug("rm -rf processors.txt")
