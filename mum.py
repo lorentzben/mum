@@ -34,7 +34,6 @@ logger.addHandler(file_logger)
 logger.addHandler(console_logger)
 
 
-
 try:
     logger.info("checking if mothur_py is installed")
     from mothur_py import Mothur
@@ -61,12 +60,14 @@ def design_oligos_ex():
     if os.path.exists("design.txt"):
         logger.info("design.txt exists")
     else:
-        logger.critical("Make sure a design file named design.txt is in this directory")
+        logger.critical(
+            "Make sure a design file named design.txt is in this directory")
         exit(1)
     if os.path.exists("oligos.txt"):
         logger.info("oligos.txt exists")
     else:
-        logger.critical("Make sure the primers used in PCR are in oligos.txt in this directory")
+        logger.critical(
+            "Make sure the primers used in PCR are in oligos.txt in this directory")
         exit(1)
 
 # Checks to see if .fastq files exist, if yes if they are div by 2, if no check fastq.tar.gz exist
@@ -79,13 +80,14 @@ def samples_ex():
 
         fastq_tar_gz = glob.glob('./*.fastq.gz')
         if not fastq_tar_gz:
-            logging.critical("Please check to make sure fastq or fastq.gz files exist")
+            logging.critical(
+                "Please check to make sure fastq or fastq.gz files exist")
         else:
             logger.info("Unzipping files")
             os.system("gunzip *.fastq.gz")
     else:
         logger.info(str(len(fastq)) + " Fastq files detected " +
-              str((len(fastq)/2)) + " Samples expected ")
+                    str((len(fastq)/2)) + " Samples expected ")
         if (len(fastq) % 2 != 0):
             logger.error("if using paired reads check for missing reads")
 
@@ -137,10 +139,11 @@ def mothurCompleted():
 def main(arg):
     logger.info("running setup checks")
     setup()
-
+    mothur_batch.set_up_logger(arg.quiet)
+    readTableNumpy.set_up_logger(arg.quiet)
     logger.info("calling mothur batch")
     mothur_batch.mothur_batch(project_name=arg.job_name, standard=not arg.custom, max_len=arg.max_len,
-                              pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample,quiet=quiet)
+                              pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample)
 
 
 if __name__ == "__main__":
@@ -157,10 +160,11 @@ if __name__ == "__main__":
                         help='pre cluster value, higher is more stringent', dest='pre_clust')
     parser.add_argument('-s', action='store', type=int, required=False,
                         help='sub sample value, only applicable for custom runs', dest='sub_sample')
-    parser.add_argument('-q','--quiet',action='store_true', default=False, help="Reduces the amount of text printed to terminal, check logfiles more often",dest='quiet')
+    parser.add_argument('-q', '--quiet', action='store_true', default=False,
+                        help="Reduces the amount of text printed to terminal, check logfiles more often", dest='quiet')
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
 
     args = parser.parse_args()
-    #print(args)
+    # print(args)
     main(args)

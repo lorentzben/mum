@@ -7,27 +7,29 @@ import csv
 import logging
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-# Logging handler which catches EVERYTHING
-file_logger = logging.FileHandler('mum.log')
-file_logger.setLevel(logging.DEBUG)
-# Logging handler which logs less
-console_logger = logging.StreamHandler()
-if quiet:
-    console_logger.setLevel(logging.WARNING)
-else:
-    console_logger.setLevel(logging.INFO)
+def set_up_logger(quiet):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    # Logging handler which catches EVERYTHING
+    file_logger = logging.FileHandler('mum.log')
+    file_logger.setLevel(logging.DEBUG)
+    # Logging handler which logs less
+    console_logger = logging.StreamHandler()
+    if quiet:
+        console_logger.setLevel(logging.WARNING)
+    else:
+        console_logger.setLevel(logging.INFO)
 
-# Formats the logs so they are pretty
-logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
-formatter = logging.Formatter(logFormatter)
-file_logger.setFormatter(formatter)
-console_logger.setFormatter(formatter)
+    # Formats the logs so they are pretty
+    logFormatter = '%(asctime)s- %(name)s - %(lineno)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(logFormatter)
+    file_logger.setFormatter(formatter)
+    console_logger.setFormatter(formatter)
 
-# adds handlers to logger
-logger.addHandler(file_logger)
-logger.addHandler(console_logger)
+    # adds handlers to logger
+    logger.addHandler(file_logger)
+    logger.addHandler(console_logger)
+
 
 try:
     from mothur_py import Mothur
@@ -35,7 +37,7 @@ except ImportError:
     logger.critical("install mothur-py using pip")
 
 
-def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_samp_size, quiet):
+def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_samp_size):
     # This one uses the trainset16_022016.pds.fasta
     # Uses the silva.bacteria.fasta
 
@@ -114,13 +116,13 @@ def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_sam
 
         for line in contents:
             try:
-                
+
                 new_1 = int(float(line[1]))
                 new_2 = int(float(line[2]))
                 start = start+new_1
                 end = end+new_2
                 count = count + 1
-                
+
             except ValueError:
                 pass
     f_start = int(start/count)
@@ -191,8 +193,8 @@ def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_sam
         logger.info("custom run")
         #sub_samp_size = input("Please enter a value to Subsample at > ")
         sub_samp_size = sub_samp_size
-    logger.info("Subsampling size: " +str(sub_samp_size))
-    
+    logger.info("Subsampling size: " + str(sub_samp_size))
+
     # Normalizes to a picked value
     m.sub.sample(fasta=project_name+".trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta", count=project_name+".trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table",
                  taxonomy=project_name+".trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy", size=sub_samp_size, persample=True)
@@ -208,7 +210,7 @@ def mothur_batch(project_name, standard, max_len, pre_clust_val, design, sub_sam
     # end of preprocessing
     logger.info("End of Preprocessing")
 
-    #Creates a sequence Table and prints it to the terminal as well as to file with the filename seqTablePROJECTNAME.txt
+    # Creates a sequence Table and prints it to the terminal as well as to file with the filename seqTablePROJECTNAME.txt
     sequence_table = readTableNumpy.create_seq_table(project_name)
     readTableNumpy.print_seq_table(sequence_table)
     readTableNumpy.write_seq_table_to_file(sequence_table, project_name)
