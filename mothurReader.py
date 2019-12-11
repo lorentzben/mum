@@ -122,6 +122,6 @@ for read in my_fastqs:
     for record in SeqIO.parse(read, "fastq"):
 
         quals = record.letter_annotations["phred_quality"]
-    average_qual_scores.append((read, numpy.mean(quals)))
+    average_qual_scores.append((read, numpy.around(numpy.mean(quals),decimals=0)))
 
 print(average_qual_scores)
