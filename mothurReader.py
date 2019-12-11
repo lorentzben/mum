@@ -1,3 +1,8 @@
+from Bio import SeqIO
+import os
+import statistics
+
+"""
 import csv
 project_name = "test"
 
@@ -100,7 +105,7 @@ with open(project_name+".trim.contigs.good.unique.good.filter.unique.precluster.
         except ValueError:
             pass
 readsTable.append(["Chimera 20", chim20, float(chim20/assmb3)*100])
-
+"""
 
 where_am_i = os.getcwd()
 my_fastqs = []
