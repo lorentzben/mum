@@ -114,5 +114,6 @@ average_qual_scores = []
 for read in my_fastqs:
     for record in SeqIO.parse(read, "fastq"):
         quals = record.format("phread_qual")
-        average_qual_scores.append((read, mean(quals))
+        average_qual_scores.append((read, mean(quals)))
+
 print(average_qual_scores)
