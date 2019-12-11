@@ -13,6 +13,7 @@ import argparse
 import datetime
 import logging
 from Bio import SeqIO
+import numpy
 
 
 logger = logging.getLogger(__name__)
@@ -73,28 +74,43 @@ def design_oligos_ex():
 # Checks to see if .fastq files exist, if yes if they are div by 2, if no check fastq.tar.gz exist
 
 def check_sample_qual():
-    where_am_i = os.getcwd()
-    my_fastqs = []
-    #Looks through directory and adds a location for all .fastq files found 
+    where_am_i=os.getcwd()
+    logger.info("I am here " + where_am_i)
+    my_fastqs=[]
+    # Looks through directory and adds a location for all .fastq files found
+    logger.info("Detecting fastq files in dir, storing to list")
     for file in os.listdir(where_am_i):
         if file.endswith(".fastq"):
-            my_fastqs = os.path.join(where_am_i , file)
-    #will hold tuples of seq name and average qual score
-    average_qual_scores = []
-    # creates a list of quality scores and appends it to a list 
+            my_fastqs.append(os.path.join(where_am_i, file))
+    # will hold tuples of seq name and average qual score
+    average_qual_scores=[]
+    # creates a list of quality scores and appends it to a list
+
+    logger.info("Calculating average quality score of reads and adding to list")
     for read in my_fastqs:
         for record in SeqIO.parse(read, "fastq"):
-            quals = record.format("phread_qual")
-            average_qual_scores.append((read,mean(quals))
-    return average_qual_scores
-            
+
+            quals=record.letter_annotations["phred_quality"]
+        average_qual_scores.append(
+            (read, numpy.around(numpy.mean(quals), decimals=0)))
+    
+    for score in average_qual_scores :
+        if score[1] >= 20 :
+            logger.info("All .fastq reads examined are over phread score of 20")
+            pass
+        else:
+            logger.warning("One or more of your reads have a average quality score of 20 or lower")
+
+    #return average_qual_scores
+
+
 
 def samples_ex():
     logger.info("Checking to see if samples exist")
-    fastq = glob.glob('./*.fastq')
+    fastq=glob.glob('./*.fastq')
     if not fastq:
 
-        fastq_tar_gz = glob.glob('./*.fastq.gz')
+        fastq_tar_gz=glob.glob('./*.fastq.gz')
         if not fastq_tar_gz:
             logging.critical(
                 "Please check to make sure fastq or fastq.gz files exist")
@@ -158,29 +174,29 @@ def main(arg):
     mothur_batch.set_up_logger(arg.quiet)
     readTableNumpy.set_up_logger(arg.quiet)
     logger.info("calling mothur batch")
-    mothur_batch.mothur_batch(project_name=arg.job_name, standard=not arg.custom, max_len=arg.max_len,
-                              pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample)
+    mothur_batch.mothur_batch(project_name = arg.job_name, standard = not arg.custom, max_len = arg.max_len,
+                              pre_clust_val = arg.pre_clust, design = "design.txt", sub_samp_size = arg.sub_sample)
 
 
 if __name__ == "__main__":
     # Build Argument Parser in order to facilitate ease of use for user
-    parser = argparse.ArgumentParser(
-        description="Perform Analysis of 16s Microbial Data using Mothur")
-    parser.add_argument('-n', action='store', required=True,
-                        help="name for analysis, will be filename for resultant files", dest='job_name')
-    parser.add_argument('-c', action='store_true', default=False, required=False,
-                        help="flag to use custom parameters, ignore for kelly lab parameters", dest='custom')
-    parser.add_argument('-l', action='store', default=300, type=int, required=False,
-                        help='determines the longest value permitted for sequences', dest='max_len')
-    parser.add_argument('-p', action='store', default=2, type=int, required=False,
-                        help='pre cluster value, higher is more stringent', dest='pre_clust')
-    parser.add_argument('-s', action='store', type=int, required=False,
-                        help='sub sample value, only applicable for custom runs', dest='sub_sample')
-    parser.add_argument('-q', '--quiet', action='store_true', default=False,
-                        help="Reduces the amount of text printed to terminal, check logfiles more often", dest='quiet')
-    parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s 1.0')
+    parser=argparse.ArgumentParser(
+        description = "Perform Analysis of 16s Microbial Data using Mothur")
+    parser.add_argument('-n', action = 'store', required = True,
+                        help = "name for analysis, will be filename for resultant files", dest = 'job_name')
+    parser.add_argument('-c', action = 'store_true', default = False, required = False,
+                        help = "flag to use custom parameters, ignore for kelly lab parameters", dest = 'custom')
+    parser.add_argument('-l', action = 'store', default = 300, type = int, required = False,
+                        help = 'determines the longest value permitted for sequences', dest = 'max_len')
+    parser.add_argument('-p', action = 'store', default = 2, type = int, required = False,
+                        help = 'pre cluster value, higher is more stringent', dest = 'pre_clust')
+    parser.add_argument('-s', action = 'store', type = int, required = False,
+                        help = 'sub sample value, only applicable for custom runs', dest = 'sub_sample')
+    parser.add_argument('-q', '--quiet', action = 'store_true', default = False,
+                        help = "Reduces the amount of text printed to terminal, check logfiles more often", dest = 'quiet')
+    parser.add_argument('-v', '--version', action = 'version',
+                        version = '%(prog)s 1.0')
 
-    args = parser.parse_args()
+    args=parser.parse_args()
     # print(args)
     main(args)
