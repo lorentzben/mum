@@ -22,7 +22,7 @@ with open(project_name+".trim.contigs.good.unique.summary") as summary:
         # print(line[1])
         # print(line[2])
 
-    #print(str(int(start/count)) + " " + str(int(end/count)))
+    # print(str(int(start/count)) + " " + str(int(end/count)))
 subSampleChoices = []
 with open(project_name+".trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count.summary") as countsummary:
 
@@ -100,3 +100,19 @@ with open(project_name+".trim.contigs.good.unique.good.filter.unique.precluster.
         except ValueError:
             pass
 readsTable.append(["Chimera 20", chim20, float(chim20/assmb3)*100])
+
+
+where_am_i = os.getcwd()
+    my_fastqs = []
+    # Looks through directory and adds a location for all .fastq files found
+    for file in os.listdir(where_am_i):
+        if file.endswith(".fastq"):
+            my_fastqs = os.path.join(where_am_i, file)
+    # will hold tuples of seq name and average qual score
+    average_qual_scores = []
+    # creates a list of quality scores and appends it to a list
+    for read in my_fastqs:
+        for record in SeqIO.parse(read, "fastq"):
+            quals = record.format("phread_qual")
+            average_qual_scores.append((read, mean(quals))
+    print(average_qual_scores)

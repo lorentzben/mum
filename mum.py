@@ -12,6 +12,7 @@ import mothur_batch
 import argparse
 import datetime
 import logging
+from Bio import SeqIO
 
 
 logger = logging.getLogger(__name__)
@@ -53,14 +54,13 @@ def setup():
     check_rdp()
     check_silva()
     samples_ex()
+    check_sample_qual()
 
 
 # Checks if a design file and primers exists
 def design_oligos_ex():
     if os.path.exists("design.txt"):
-        logger.info("design.txt exists")
-    else:
-        logger.critical(
+        logger.info("design.txt exists")temp_qual_score = 0
             "Make sure a design file named design.txt is in this directory")
         exit(1)
     if os.path.exists("oligos.txt"):
@@ -72,6 +72,22 @@ def design_oligos_ex():
 
 # Checks to see if .fastq files exist, if yes if they are div by 2, if no check fastq.tar.gz exist
 
+def check_sample_qual():
+    where_am_i = os.getcwd()
+    my_fastqs = []
+    #Looks through directory and adds a location for all .fastq files found 
+    for file in os.listdir(where_am_i):
+        if file.endswith(".fastq"):
+            my_fastqs = os.path.join(where_am_i , file)
+    #will hold tuples of seq name and average qual score
+    average_qual_scores = []
+    # creates a list of quality scores and appends it to a list 
+    for read in my_fastqs:
+        for record in SeqIO.parse(read, "fastq"):
+            quals = record.format("phread_qual")
+            average_qual_scores.append((read,mean(quals))
+    return average_qual_scores
+            
 
 def samples_ex():
     logger.info("Checking to see if samples exist")
