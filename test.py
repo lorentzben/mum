@@ -10,6 +10,15 @@ class TestSum(unittest.TestCase):
         data = [1, 2, 3]
         result = sum(data)
         self.assertEqual(result, 6)
+    def check_mothur_py_installed(self):
+        
+    def test_oligo_exist(self):
+
+    def test_rdp_exist(self):
+
+    def test_silva_exist(self):
+
+    
 
 if __name__ == '__main__':
     unittest.main()
