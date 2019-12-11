@@ -73,6 +73,7 @@ def design_oligos_ex():
 
 # Checks to see if .fastq files exist, if yes if they are div by 2, if no check fastq.tar.gz exist
 
+#TODO this could be a testable function 
 def check_sample_qual():
     where_am_i=os.getcwd()
     logger.info("I am here " + where_am_i)
