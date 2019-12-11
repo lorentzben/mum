@@ -112,16 +112,15 @@ my_fastqs = []
     # Looks through directory and adds a location for all .fastq files found
 for file in os.listdir(where_am_i):
     if file.endswith(".fastq"):
-        my_fastqs = os.path.join(where_am_i, file)
+        my_fastqs.append(os.path.join(where_am_i, file))
 # will hold tuples of seq name and average qual score
 average_qual_scores = []
 # creates a list of quality scores and appends it to a list
 print(my_fastqs)
-"""
+
 for read in my_fastqs:
     for record in SeqIO.parse(read, "fastq"):
         quals = record.format("phread_qual")
         average_qual_scores.append((read, mean(quals)))
 
 print(average_qual_scores)
-"""
