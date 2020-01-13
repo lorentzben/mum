@@ -61,7 +61,9 @@ def setup():
 # Checks if a design file and primers exists
 def design_oligos_ex():
     if os.path.exists("design.txt"):
-        logger.info("design.txt exists")temp_qual_score = 0
+        logger.info("design.txt exists")
+    else:
+        logger.critical(
             "Make sure a design file named design.txt is in this directory")
         exit(1)
     if os.path.exists("oligos.txt"):
