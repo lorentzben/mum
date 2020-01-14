@@ -174,7 +174,7 @@ def check_silva():
 
 def send_email_when_finished(email, project):
     message = '\n Hello! \n Your project %s is finished' % project
-    my_email = "mumproject@gmail.com"
+    my_email = "mumprogram@gmail.com"
     subject = 'Your project %s is finished' %project
     header ='From: %s \n' % my_email
     header += 'To: %s \n' % ','.join(email)
