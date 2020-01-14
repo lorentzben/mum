@@ -173,19 +173,19 @@ def check_silva():
 
 
 def send_email_when_finished(email, project):
+    message = '\n Hello! \n Your project %s is finished' % project
     my_email = "mumproject@gmail.com"
     subject = 'Your project %s is finished' %project
     header ='From: %s \n' % my_email
     header += 'To: %s \n' % ','.join(email)
     header+='Subject: %s \n \n' % subject 
     message = header + message
-    message = '\n Hello! \n Your project %s is finished' % project
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
     server.login(my_email,'password')
-    problems = server.sendmail(my_email, user_email, message)
+    problems = server.sendmail(my_email, email, message)
     server.quit()
-    log.info('mumproject@gmail.com', email, msg)
+    log.info('mumproject@gmail.com', email, message)
     return problems
     
     
