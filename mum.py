@@ -177,7 +177,7 @@ def send_email_when_finished(email, project):
     my_email = "mumprogram@gmail.com"
     subject = 'Your project %s is finished' %project
     header ='From: %s \n' % my_email
-    header += 'To: %s \n' % ','.join(email)
+    header += 'To: %s \n' % email
     header+='Subject: %s \n \n' % subject 
     message = header + message
     server = smtplib.SMTP('smtp.gmail.com:587')
