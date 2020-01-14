@@ -38,6 +38,7 @@ logger.addHandler(console_logger)
 
 # setup util to send email
 server = smtplib.SMTP('smtp.gmail.com', 587)
+server.starttls()
 # log into the server, this will be your own information
 server.login("mumprogram@gmail.com", "password")
 
