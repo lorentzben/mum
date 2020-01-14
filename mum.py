@@ -185,7 +185,7 @@ def send_email_when_finished(email, project):
     server.login(my_email,'password')
     problems = server.sendmail(my_email, email, message)
     server.quit()
-    logger.info(my_email, email, message)
+    logger.info(my_email +" "+ email +" "+ message)
     return problems
     
     
