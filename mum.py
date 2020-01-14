@@ -35,13 +35,13 @@ console_logger.setFormatter(formatter)
 # adds handlers to logger
 logger.addHandler(file_logger)
 logger.addHandler(console_logger)
-
+'''
 # setup util to send email
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
 # log into the server, this will be your own information
 server.login("mumprogram@gmail.com", "password")
-
+'''
 try:
     logger.info("checking if mothur_py is installed")
     from mothur_py import Mothur
@@ -173,9 +173,22 @@ def check_silva():
 
 
 def send_email_when_finished(email, project):
-    msg = '\n Hello! \n Your project %i is finished' % project
-    server.sendmail('mumproject@gmail.com', email, msg)
+    my_email = "mumproject@gmail.com"
+    subject = 'Your project %s is finished' %project
+    header ='From: %s \n' % my_email
+    header += 'To: %s \n' % ','.join(email)
+    header+='Subject: %s \n \n' % subject 
+    message = header + message
+    message = '\n Hello! \n Your project %s is finished' % project
+    server = smtplib.SMTP('smtp.gmail.com:587')
+    server.starttls()
+    server.login(my_email,'password')
+    problems = server.sendmail(my_email, user_email, message)
+    server.quit()
     log.info('mumproject@gmail.com', email, msg)
+    return problems
+    
+    
 
 
 # TODO Check that the mothur run was sucessful
