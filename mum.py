@@ -188,24 +188,18 @@ def send_email_when_finished(email, project):
     logger.info(my_email +" "+ email +" "+ message)
     return problems
     
-    
-
-
-# TODO Check that the mothur run was sucessful
-def mothurCompleted():
-    # TODO Check if the three files exist in the end
-    print("ok")
-
-    # TODO move them into a dir called output for r analysis
-
+   
 
 def main(arg):
     logger.info("running setup checks")
     setup()
     mothur_batch.set_up_logger(arg.quiet)
     readTableNumpy.set_up_logger(arg.quiet)
-    logger.info("calling mothur batch")
-    mothur_batch.mothur_batch(project_name=arg.job_name, standard=not arg.custom, max_len=arg.max_len,
+    if args.batch:
+        os.system('mothur '+args.batch)
+    else:    
+        logger.info("calling mothur batch")
+        mothur_batch.mothur_batch(project_name=arg.job_name, standard=not arg.custom, max_len=arg.max_len,
                               pre_clust_val=arg.pre_clust, design="design.txt", sub_samp_size=arg.sub_sample)
     if args.email:
         send_email_when_finished(args.email, args.job_name)
@@ -229,6 +223,7 @@ if __name__ == "__main__":
                         help="Reduces the amount of text printed to terminal, check logfiles more often", dest='quiet')
     parser.add_argument('-e', action='store', type=str, required=False,
                         help='requires a valid email to be provided, will send an email to provided email address when analysis is complete', dest='email')
+    parser.add_argument('-b', 'batch', action='store', required=False, help="used to call a mothur batch script, useful if you want the setup checks but want to use a batch script")
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
 

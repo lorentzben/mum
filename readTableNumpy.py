@@ -98,7 +98,3 @@ def write_seq_table_to_file(seq_table, project_name):
 
     logger.info("Table written to: seqTable"+project_name+".txt")
 
-# Test case
-#temp = create_seq_table("test")
-# print_seq_table(temp)
-# write_seq_table_to_file(temp,"test")
